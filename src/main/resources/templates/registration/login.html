@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/common-head">
+    <title>Форма авторизации</title>
+</head>
+<body class="content">
+<nav th:replace="fragments/nav-bar::nav-bar">
+</nav>
+<div class="container">
+    <div class="row justify-content-center">
+        <form method="post" th:action="@{/login}" class="col-md-6">
+            <h2>Вход</h2>
+            <div class="mb-3">
+                <label for="name" class="form-label">Логин</label>
+                <input type="text" class="form-control" id="name" name="username">
+            </div>
+            <div class="mb-3">
+                <label for="pass" class="form-label">Пароль</label>
+                <input type="password" class="form-control" id="pass" name="password">
+                <br>
+            </div>
+            <a th:href="@{'/register'}" class="btn btn-secondary">Регистрация</a>
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="currentPage='Информация о товаре'">
+<head th:include="fragments/common-head">
+</head>
+<body class="content">
+<nav th:replace="fragments/nav-bar::nav-bar">
+</nav>
+<div class="container">
+    <div class="row justify-content-center g-0">
+        <div class="col">
+            <h2 th:text="#{title.product.info}">Информация о товаре</h2>
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img th:src="@{${product.getImageUrl()}}" src="..." class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h2 th:text="${product.title}" class="card-text"></h2>
+                            <p th:text="${'Цена: ' + product.price}" class="card-text"><small class="text-muted"></small></p>
+                            <button th:attr="data-product-id=${product.id}" class="btn btn-success w-100" onclick="onClickAddToCart(this)">
+                                Добавить в корзину
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

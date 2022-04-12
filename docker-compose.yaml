@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+    #  geek-market-a:
+    #    build: .
+    #    ports:
+    #      - "8080:8080"
+
+    maildev:
+        image: maildev/maildev
+        ports:
+            - "1080:1080"
+            - "1025:1025"
+
+    redis:
+        image: 'bitnami/redis:latest'
+        container_name: redis-a
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+            - REDIS_PORT_NUMBER=7000
+        ports:
+            - "9999:7000"
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+        container_name: elasticsearch-a
+        environment:
+            - node.name=elasticsearch
+            - discovery.seed_hosts=elasticsearch
+            - cluster.initial_master_nodes=elasticsearch
+            - cluster.name=docker-cluster
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - esdata1:/home/andrey/IntellijWorkPlace/spring-boot-market-algorythm/data
+        ports:
+            - 9200:9200
+
+volumes:
+    esdata1:
+        driver: local
