@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<MarketUser, Long> {
 
     @Query("FROM MarketUser u JOIN FETCH u.authorities")
     List<MarketUser> findAllFetchAuthority();
+
+    MarketUser findByCustomer_Email(String email);
 }
