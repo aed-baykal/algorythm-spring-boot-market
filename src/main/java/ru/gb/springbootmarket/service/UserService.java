@@ -22,6 +22,10 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    public MarketUser findByEmail(String email) {
+        return userRepository.findByCustomer_Email(email);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

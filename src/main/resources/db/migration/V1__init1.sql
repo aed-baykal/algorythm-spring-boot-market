@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS customer_contacts (
      id      BIGSERIAL PRIMARY KEY,
-     email   VARCHAR(255) NOT NULL,
+     email   VARCHAR(255) NOT NULL UNIQUE,
      address TEXT NOT NULL
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     id          BIGSERIAL PRIMARY KEY,
     order_id    BIGINT REFERENCES orders (id),
     product_id  BIGINT REFERENCES products (id),
-    price       DOUBLE NOT NULL ,
+    price       DOUBLE PRECISION NOT NULL,
     quantity    INT NOT NULL,
     storage_status SMALLINT NOT NULL
 );
@@ -76,6 +76,26 @@ CREATE TABLE IF NOT EXISTS  baners(
     title     VARCHAR(255) NOT NULL UNIQUE,
     image_url VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS  message_text_elements(
+    id        BIGSERIAL PRIMARY KEY,
+    title     VARCHAR(255) NOT NULL UNIQUE,
+    text      TEXT
+);
+
+INSERT INTO message_text_elements (title, text)
+VALUES ('Приветствие1', 'Добрый день, '),
+       ('Приветствие2', '!'),
+       ('Подпись2', 'С уважением SpringBootMarket.'),
+       ('Поступил новый заказ1', 'Поступил новый заказ №'),
+       ('Поступил новый заказ2', '. Заказ ожидает обработки.'),
+       ('Заказ успешно сформирован1', 'Заказ №'),
+       ('Заказ успешно сформирован2', ' на сумму '),
+       ('Заказ успешно сформирован3', ' успешно создан и ожидает обработки.'),
+       ('Подтвердите ваш email1', 'Вам необходимо подтвердить введенный email.'),
+       ('Подтвердите ваш email2', ' Для потверждения пройдите по ссылке.'),
+       ('Подтвердите ваш email3', '<a href="http://localhost:8080/register/confirm?token='),
+       ('Подтвердите ваш email4', '" target="_blank">Подтвердить</a>');
 
 INSERT INTO customer_contacts (email, address)
 VALUES ('admin@admin.ru', 'Электросталь, ул. Захарченко, 7А'),
