@@ -11,6 +11,7 @@ import ru.gb.springbootmarket.model.Baner;
 import ru.gb.springbootmarket.service.BanerService;
 import ru.gb.springbootmarket.service.ProductElasticSearchService;
 import ru.gb.springbootmarket.service.ProductService;
+import ru.gb.springbootmarket.service.ProxyProductService;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,16 +21,19 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProxyProductService proxyProductService;
     private final ProductMapper productMapper;
     private final ProductElasticSearchService productElasticSearchService;
     private final BanerService banerService;
     private final static String BANER_PLUG = "/images/banner_plug.png";
 
     public ProductController(ProductService productService,
+                             ProxyProductService proxyProductService,
                              ProductMapper productMapper,
                              ProductElasticSearchService productElasticSearchService,
                              BanerService banerService) {
         this.productService = productService;
+        this.proxyProductService = proxyProductService;
         this.productMapper = productMapper;
         this.productElasticSearchService = productElasticSearchService;
         this.banerService = banerService;
@@ -37,7 +41,7 @@ public class ProductController {
 
     @GetMapping
     public String getAllProducts(Model model) {
-        List<ProductDto> productDtos =  productService.getAll().stream()
+        List<ProductDto> productDtos =  proxyProductService.getAll().stream()
                 .map(productMapper::productToProductDto).collect(Collectors.toList());
         pagePreparation(model, productDtos);
         return "home";
