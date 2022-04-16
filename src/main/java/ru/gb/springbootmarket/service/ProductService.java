@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService {
+public class ProductService implements ProductRequest {
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
+    @Override
     public List<Product> getAll() {
         return productRepository.findAll();
     }
