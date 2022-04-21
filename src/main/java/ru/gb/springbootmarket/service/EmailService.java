@@ -31,27 +31,25 @@ public class EmailService {
 
     @Async
     public void sendMail(EmailType emailType, Map<String, Object> params, Collection<String> receivers) {
-        switch (emailType) {
-            case USER_REGISTRATION:
-                receivers.forEach(receiver -> sendVerificationLink(receiver, params));
-                break;
-            case USER_ORDER_CREATED:
-                receivers.forEach(receiver -> sendOrderDetailsToUser(receiver, params));
-                break;
-            case MANAGER_ORDER_CREATED:
-                receivers.forEach(receiver -> sendOrderDetailsToManager(receiver, params));
-                break;
+        for (EmailType type : EmailType.values()) {
+            if (type.equals(emailType))
+                receivers.forEach(receiver -> sendMailOfEmailType(receiver, params, type.getName()));
         }
     }
 
-    private void sendOrderDetailsToManager(String to, Map<String, Object> params) {
+    private void sendMailOfEmailType(String to, Map<String, Object> params, String subjectOfTheLetter) {
         try {
+            boolean textType = false;
+            if (subjectOfTheLetter.contains("TRUE")) {
+                subjectOfTheLetter = subjectOfTheLetter.substring(0, subjectOfTheLetter.indexOf(", TRUE"));
+                textType = true;
+            }
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setTo(to);
             helper.setFrom("geek-market@gb.ru");
-            helper.setSubject("Поступил новый заказ");
-            helper.setText(textBuilder(to, params, "Поступил новый заказ"), false);
+            helper.setSubject(subjectOfTheLetter);
+            helper.setText(textBuilder(to, params, subjectOfTheLetter), textType);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send mail ", e);
@@ -86,34 +84,6 @@ public class EmailService {
         textElements = messageService.getMessageByTitle("Подпись");
         textElements.forEach(messageTextElement -> messageText.append(messageTextElement.getText()));
         return messageText.toString();
-    }
-
-    private void sendOrderDetailsToUser(String to, Map<String, Object> params) {
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setTo(to);
-            helper.setFrom("geek-market@gb.ru");
-            helper.setSubject("Заказ успешно сформирован");
-            helper.setText(textBuilder(to, params, "Заказ успешно сформирован"), false);
-            mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            LOGGER.error("failed to send mail ", e);
-        }
-    }
-
-    private void sendVerificationLink(String to, Map<String, Object> params) {
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setTo(to);
-            helper.setFrom("geek-market@gb.ru");
-            helper.setSubject("Подтвердите ваш email");
-            helper.setText(textBuilder(to, params, "Подтвердите ваш email"), true);
-            mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            LOGGER.error("failed to send mail ", e);
-        }
     }
 
 }
